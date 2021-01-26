@@ -108,11 +108,24 @@ export default class Bar {
         animateSVG(this.$bar_progress, 'width', 0, this.progress_width);
     }
 
+    // Escape HTML entities
+    escapeHTML(str) {
+      return str.replace(/[&<>'"]/g, 
+        tag => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+          }[tag]));
+    }
+        
+
     draw_label() {
         createSVG('text', {
             x: this.x + this.width / 2,
             y: this.y + this.height / 2,
-            innerHTML: this.task.name,
+            innerHTML: this.escapeHTML(this.task.name),
             class: 'bar-label',
             append_to: this.bar_group
         });
@@ -209,7 +222,7 @@ export default class Bar {
 
         this.gantt.show_popup({
             target_element: this.$bar,
-            title: this.task.name,
+            title: this.escapeHTML(this.task.name),
             subtitle: subtitle,
             task: this.task,
         });
